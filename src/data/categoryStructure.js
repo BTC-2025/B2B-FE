@@ -38,7 +38,7 @@ export const categoryMap = {
     "Storage & Organization",
   ],
 
-  Beauty: ["Skin Care", "Hair Care", "Makeup", "Personal Grooming"],
+  "Beauty": ["Skin Care", "Hair Care", "Makeup", "Personal Grooming"],
 
   "Jewelry, Eyewear & Watches": [
     "Gold Jewelry",
@@ -83,5 +83,5 @@ export const categoryMap = {
     "Real Estate Services",
   ],
 
-  Furniture: ["Office Furniture", "Home Furniture", "Outdoor Furniture"],
+  "Furniture": ["Office Furniture", "Home Furniture", "Outdoor Furniture"],
 };

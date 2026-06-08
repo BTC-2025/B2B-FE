@@ -1,15 +1,10 @@
 import React, { useState } from "react";
 import CheckIcon from "@mui/icons-material/Check";
+import { marketplaceFeatures } from "../../../data/marketplaceFeatures";
 
 const PlanCard = ({ plan, isAnnual }) => {
   const { name, price, features, recommended, isEnterprise } = plan;
-
   // Calculate price based on annual toggle (just simple math for demo)
-  const displayPrice = isEnterprise
-    ? "Custom Pricing"
-    : isAnnual
-      ? `₹${Math.floor(price * 12 * 0.9).toLocaleString()}/year`
-      : `₹${price.toLocaleString()}/month`;
 
   return (
     <div
@@ -88,47 +83,27 @@ const PlanCard = ({ plan, isAnnual }) => {
 const SubscriptionPage = () => {
   const [isAnnual, setIsAnnual] = useState(false);
 
-  const plans = [
-    {
-      name: "Basic",
-      price: 499,
-      features: [
-        "Limited Product Listings (up to 50)",
-        "Basic Analytics Dashboard",
-        "2.5% transaction fee",
-        "Email support",
-        "Standard visibility",
-      ],
-      recommended: false,
-    },
-    {
-      name: "Pro",
-      price: 1499,
-      features: [
-        "Unlimited product listings",
-        "1% transaction fee",
-        "Advanced analytics & reporting",
-        "Priority email & chat support",
-        "Featured product placements",
-        "Verified Seller Badge",
-      ],
-      recommended: true,
-    },
-    {
-      name: "Enterprise",
-      price: 0,
-      features: [
-        "Unlimited everything",
-        "Dedicated account manager",
-        "Custom transaction rates",
-        "Premium API access",
-        "24/7 phone support",
-        "Custom branding options",
-      ],
-      recommended: false,
-      isEnterprise: true,
-    },
-  ];
+const plans = [
+  {
+    name: "Basic",
+    price: 499,
+    features: marketplaceFeatures.sellerFeatures.slice(0, 5),
+    recommended: false,
+  },
+  {
+    name: "Pro",
+    price: 1499,
+    features: marketplaceFeatures.sellerFeatures.slice(0, 10),
+    recommended: true,
+  },
+  {
+    name: "Enterprise",
+    price: 0,
+    features: marketplaceFeatures.enterpriseFeatures,
+    recommended: false,
+    isEnterprise: true,
+  },
+];
 
   return (
     <div className="flex-1 overflow-y-auto custom-scrollbar bg-gray-50/50 dark:bg-slate-900/50 p-4 sm:p-6 lg:p-10 pb-20">

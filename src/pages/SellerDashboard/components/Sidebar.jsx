@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import { IoStar } from "react-icons/io5";
@@ -168,6 +167,11 @@ const Sidebar = ({ isOpen, setIsOpen, onNavigate }) => {
             icon={<AccountBalanceWalletIcon />}
             label="Transactions"
             onClick={() => onNavigate && onNavigate("transactions")}
+          />
+          <NavItem
+            icon={<span className="material-symbols-outlined">payments</span>}
+            label="Subscription Plans"
+            onClick={() => onNavigate && onNavigate("subscription")}
           />
           <div className="pt-4 mt-4 border-t border-gray-100 dark:border-slate-700">
             <NavItem

@@ -44,6 +44,38 @@ const SellerDashboard = () => {
       );
     }
 
+    if (activeView === "subscription") {
+      return <SubscriptionPage />;
+    }
+
+    if (activeView === "customers") {
+      return (
+        <div className="flex-1 p-10 bg-[#F4F5F7]">
+          <h1 className="text-2xl font-bold mb-6">Customer Insights</h1>
+          <div className="bg-white p-12 rounded-3xl text-center shadow-sm border border-gray-100">
+             <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+               <span className="material-symbols-outlined text-blue-600">group</span>
+             </div>
+             <p className="text-gray-500 font-medium">Customer relationship management module coming soon.</p>
+          </div>
+        </div>
+      );
+    }
+
+    if (activeView === "reviews") {
+      return (
+        <div className="flex-1 p-10 bg-[#F4F5F7]">
+          <h1 className="text-2xl font-bold mb-6">Product Reviews</h1>
+          <div className="bg-white p-12 rounded-3xl text-center shadow-sm border border-gray-100">
+             <div className="w-16 h-16 bg-yellow-50 rounded-full flex items-center justify-center mx-auto mb-4">
+               <span className="material-symbols-outlined text-yellow-600">star</span>
+             </div>
+             <p className="text-gray-500 font-medium">Monitor and respond to customer feedback here.</p>
+          </div>
+        </div>
+      );
+    }
+
     if (activeView === "products") {
       return (
         <div className="flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-6 lg:p-10 pb-20">

@@ -1,8 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "../../services/api";
 
 const SellerLogin = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError("");
+    try {
+      const data = await loginUser({ email, password });
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data));
+      navigate("/seller-dashboard");
+    } catch (err) {
+      setError(err.response?.data?.message || "Invalid credentials");
+    }
+  };
 
   return (
     <div className="bg-[#E9F4FF] font-display min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 relative ">
@@ -49,20 +66,26 @@ const SellerLogin = () => {
               </p>
             </div>
 
+            {error && (
+              <div className="mb-4 p-3 bg-red-100 text-red-700 text-sm rounded-lg font-medium">
+                {error}
+              </div>
+            )}
+
             {/* Form */}
             <form
               className="flex flex-col gap-5"
-              onSubmit={(e) => {
-                e.preventDefault();
-                navigate("/seller-dashboard");
-              }}
+              onSubmit={handleLogin}
             >
               {/* Email */}
               <label>
                 <p className="pb-2 font-medium">Email Address</p>
                 <input
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@company.com"
+                  required
                   className="w-full h-14 rounded-lg border border-[#dce0e5] bg-white p-[15px] focus:ring-2 focus:ring-[#195BAC]/20 focus:border-[#195BAC] outline-none"
                 />
               </label>
@@ -76,14 +99,12 @@ const SellerLogin = () => {
                 <div className="flex rounded-lg border border-[#dce0e5] focus-within:ring-2 focus-within:ring-[#195BAC]/20">
                   <input
                     type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
+                    required
                     className="flex-1 h-14 bg-white p-[15px] outline-none rounded-l-lg"
                   />
-                  <div className="flex items-center justify-center px-4 cursor-pointer">
-                    <span className="material-symbols-outlined">
-                      visibility
-                    </span>
-                  </div>
                 </div>
               </label>
               <span className="text-[#195BAC] text-sm font-medium cursor-pointer">

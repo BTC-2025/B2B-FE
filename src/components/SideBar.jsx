@@ -38,11 +38,11 @@ export default function SideBar() {
             <li
               key={index}
               onClick={() =>
-                navigate(`/category/${encodeURIComponent(category)}`)
+                navigate(`/category/${encodeURIComponent(category.name)}`)
               }
               className="cursor-pointer hover:text-primary hover:bg-white p-2 rounded transition-colors duration-200"
             >
-              {category}
+              {category.name}
             </li>
           ))}
         </ul>

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import { createProduct } from "../../../services/api";
 
 const PaymentMethod = ({ icon, label, active, dashed, onClick }) => {
   return (
@@ -8,6 +9,7 @@ const PaymentMethod = ({ icon, label, active, dashed, onClick }) => {
       className={`h-10 px-4 rounded-lg border flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 select-none ${active ? "border-[#195BAC] bg-[#195BAC]/5 dark:bg-[#195BAC]/20 text-[#195BAC] dark:text-[#5c9ce6] shadow-sm" : dashed ? "border-dashed border-gray-300 dark:border-slate-600 text-gray-400 hover:border-[#195BAC] dark:hover:border-[#5c9ce6] hover:text-[#195BAC] dark:hover:text-[#5c9ce6]" : "border-gray-200 dark:border-slate-600 text-gray-600 dark:text-gray-300 hover:border-[#195BAC] dark:hover:border-[#5c9ce6] hover:bg-gray-50 dark:hover:bg-slate-700"}`}
     >
       <span className="material-symbols-outlined text-lg">{icon}</span>
+      <span className="text-xs font-semibold">{label}</span>
       {active && (
         <span className="w-1.5 h-1.5 rounded-full bg-[#195BAC] dark:bg-[#5c9ce6]"></span>
       )}
@@ -15,32 +17,38 @@ const PaymentMethod = ({ icon, label, active, dashed, onClick }) => {
   );
 };
 
-const ProductEditor = ({ isNewProduct }) => {
+const initialData = {
+  productName: "Smart Watches",
+  brand: "Astro Retail",
+  category: "Electronics",
+  regularPrice: "280",
+  salePrice: "180",
+  schedule: "08/12/2023 - 08/24/2023",
+  date: "08/23/2023",
+  sku: "123456HG",
+  stock: "1234",
+};
+
+const emptyData = {
+  productName: "",
+  brand: "Astro Retail",
+  category: "Electronics",
+  regularPrice: "",
+  salePrice: "",
+  schedule: "",
+  date: "",
+  sku: "",
+  stock: "",
+};
+
+const defaultImages = [
+  "https://images.unsplash.com/photo-1591337676887-a217a6970a8a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+  "https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+  "https://images.unsplash.com/photo-1616348436168-de43ad0db179?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+];
+
+const ProductEditor = ({ isNewProduct, onAddProduct }) => {
   const [activeTab, setActiveTab] = useState("All");
-
-  const initialData = {
-    productName: "Smart Watches",
-    brand: "Astro Retail",
-    category: "Electronics",
-    regularPrice: "280",
-    salePrice: "180",
-    schedule: "08/12/2023 - 08/24/2023",
-    date: "08/23/2023",
-    sku: "123456HG",
-    stock: "1234",
-  };
-
-  const emptyData = {
-    productName: "",
-    brand: "Astro Retail",
-    category: "Electronics",
-    regularPrice: "",
-    salePrice: "",
-    schedule: "",
-    date: "",
-    sku: "",
-    stock: "",
-  };
 
   const [formData, setFormData] = useState(
     isNewProduct ? emptyData : initialData,
@@ -57,15 +65,34 @@ const ProductEditor = ({ isNewProduct }) => {
   };
 
   /* State for Images */
-  const defaultImages = [
-    "https://images.unsplash.com/photo-1591337676887-a217a6970a8a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1616348436168-de43ad0db179?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-  ];
   const [images, setImages] = useState(isNewProduct ? [] : defaultImages);
 
   /* Refs for file inputs */
   const fileInputRef = React.useRef(null);
+
+  const handlePublish = async () => {
+    try {
+      const productPayload = {
+        title: formData.productName,
+        description: `Premium wholesale B2B ${formData.productName} by Astro Retail. High quality production materials and design.`,
+        category: formData.category,
+        subCategory: "General",
+        brand: formData.brand,
+        price: parseFloat(formData.salePrice || formData.regularPrice || 0),
+        moq: 10,
+        stock: parseInt(formData.stock || 100),
+        images: images.length > 0 ? images : ["https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"],
+        tags: [formData.category.toLowerCase(), "wholesale", "b2b"]
+      };
+
+      const newProduct = await createProduct(productPayload);
+      if (onAddProduct) {
+        onAddProduct(newProduct);
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to publish product");
+    }
+  };
 
   /* Handle Image Upload */
   const handleImageUpload = (e) => {
@@ -124,7 +151,7 @@ const ProductEditor = ({ isNewProduct }) => {
               key={i}
               onClick={() => setActiveTab(tabName)}
               className={`pb-3 border-b-2 whitespace-nowrap transition-colors ${
-                (activeTab === "All" && i === 0) || activeTab === tabName
+                isActive
                   ? "border-[#195BAC] dark:border-[#5c9ce6] text-[#195BAC] dark:text-[#5c9ce6]"
                   : "border-transparent hover:text-gray-900 dark:hover:text-white"
               }`}
@@ -445,7 +472,10 @@ const ProductEditor = ({ isNewProduct }) => {
               <button className="h-12 px-8 rounded-full bg-[#195BAC]/10 dark:bg-[#195BAC]/20 text-[#195BAC] dark:text-[#5c9ce6] font-bold text-sm hover:bg-[#195BAC]/20 dark:hover:bg-[#195BAC]/30 transition-colors">
                 Save to Drafts
               </button>
-              <button className="h-12 px-10 rounded-full bg-[#00C2A0] text-white font-bold text-sm hover:bg-[#00a98b] shadow-lg shadow-[#00C2A0]/20 hover:shadow-xl hover:shadow-[#00C2A0]/30 transform active:scale-95 transition-all">
+              <button
+                onClick={handlePublish}
+                className="h-12 px-10 rounded-full bg-[#00C2A0] text-white font-bold text-sm hover:bg-[#00a98b] shadow-lg shadow-[#00C2A0]/20 hover:shadow-xl hover:shadow-[#00C2A0]/30 transform active:scale-95 transition-all cursor-pointer"
+              >
                 Publish Product
               </button>
             </div>

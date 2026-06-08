@@ -147,6 +147,25 @@ export default function SecondaryNavBar() {
               <FaChevronRight size={12} />
             </button>
           </div>
+
+          {/* Quick Links */}
+          <div className="flex items-center gap-6 border-l border-gray-300 pl-6 shrink-0">
+            <span
+              onClick={() => navigate("/post-rfq")}
+              className="hover:text-[#195BAC] transition-colors cursor-pointer flex items-center gap-1.5"
+            >
+              <span className="material-symbols-outlined text-[18px]">campaign</span>
+              Post RFQ
+            </span>
+            <span className="hover:text-[#195BAC] transition-colors cursor-pointer flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-[18px]">verified</span>
+              Top Suppliers
+            </span>
+            <span className="bg-[#195BAC] text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 hover:bg-[#154d92] transition-colors cursor-pointer">
+              <span className="material-symbols-outlined text-[14px]">local_shipping</span>
+              Ready to Ship
+            </span>
+          </div>
         </div>
       </div>
     </div>
